@@ -107,16 +107,16 @@ def format_text(file_name):
 
         if check_line(line):
             event = []
-            for x in range(index + 2, len(lines)):
+            for x in range(index + 3, len(lines)):
                 pattern = r'^(Mon|Tue|Wed|Thu|Fri|Sat|Sun) (\d{1,2}/\d{1,2}/\d{4}) (\d{1,2}:\d{2} (AM|PM)) (?:-|to) ((Mon|Tue|Wed|Thu|Fri|Sat|Sun)? \d{1,2}/\d{1,2}/\d{4} )?(\d{1,2}:\d{2} (AM|PM))$'
                 match = re.match(pattern, lines[x])
                 if match:
                     break
-                if "Location: " in lines[x - 1]:
+                if "Location: " in lines[x - 2]:
                     event = ['', '', '', '']
                     event[0] = line
-                    event[1] = lines[x - 2].strip()
-                    event[2] = lines[x - 1].strip()
+                    event[1] = lines[x - 3].strip()
+                    event[2] = lines[x - 2].strip()
                     try:
                         if not any(day in lines[x] for day in days_of_the_week):
                             pattern = r'^(Mon|Tue|Wed|Thu|Fri|Sat|Sun) (\d{1,2}/\d{1,2}/\d{4}) (\d{1,2}:\d{2} (AM|PM)) (?:-|to) ((Mon|Tue|Wed|Thu|Fri|Sat|Sun)? \d{1,2}/\d{1,2}/\d{4} )?(\d{1,2}:\d{2} (AM|PM))$'
