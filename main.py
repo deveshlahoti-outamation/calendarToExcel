@@ -94,22 +94,24 @@ def format_text(file_name):
     text = extract_text(f"{file_name}.pdf")
     lines = text.strip().split("\n")
     lines = format_lines(lines)
+    print(lines)
 
     events = []
     urgent_boards = []
 
     for index in range(len(lines)):
         line = lines[index]
-        event = ['', '', '', '']
 
         if check_urgent_board(line):
             urgent_boards.append([lines[index], lines[index + 1], lines[index + 2]])
             continue
 
         if check_line(line):
-            event[0] = line
-            for x in range(lines.index(line), len(lines)):
+            event = []
+            for x in range(index, index + 4):
                 if "Location: " in lines[x]:
+                    event = ['', '', '', '']
+                    event[0] = line
                     event[1] = lines[x - 1].strip()
                     event[2] = lines[x].strip()
                     try:
@@ -133,7 +135,9 @@ def format_text(file_name):
                             print("file finished")
                         except Exception as e:
                             print("file finished")
-            events.append(event)
+
+            if event:
+                events.append(event)
 
     return events, urgent_boards
 
