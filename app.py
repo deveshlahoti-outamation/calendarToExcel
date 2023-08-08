@@ -24,7 +24,11 @@ def save_uploaded_file(uploaded_file):
 
 
 def download_files():
-    output_files = glob.glob(os.path.join('output/files', '*.xlsx'))
+    output_files_path = 'output/files'
+    if not os.path.exists(output_files_path):
+        os.makedirs(output_files_path)
+
+    output_files = glob.glob(os.path.join(output_files_path, '*.xlsx'))
 
     # Create a Zip file
     with zipfile.ZipFile('output/files/files.zip', 'w') as zipf:

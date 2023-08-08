@@ -142,7 +142,12 @@ def format_events(events, df):
 
 
 def create_excel(df, file_name):
-    df.to_excel(f"output/{file_name}.xlsx", index=False, engine='openpyxl')
+    output_dir = "output"
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    file_path = os.path.join(output_dir, f"{file_name}.xlsx")
+    df.to_excel(file_path, index=False, engine='openpyxl')
     book = load_workbook(f"output/{file_name}.xlsx")
     sheet = book.active
     for column in sheet.columns:
@@ -181,6 +186,10 @@ def clean_files():
 
 
 def main():
+    files_dir = 'files'
+    if not os.path.exists(files_dir):
+        os.makedirs(files_dir)
+
     pdf_files = initialize_data()
 
     for pdf in pdf_files:
