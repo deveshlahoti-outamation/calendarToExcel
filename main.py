@@ -94,7 +94,6 @@ def format_text(file_name):
     text = extract_text(f"{file_name}.pdf")
     lines = text.strip().split("\n")
     lines = format_lines(lines)
-    print(lines)
 
     events = []
     urgent_boards = []
@@ -108,21 +107,28 @@ def format_text(file_name):
 
         if check_line(line):
             event = []
-            for x in range(index, index + 4):
-                if "Location: " in lines[x]:
+            for x in range(index + 2, len(lines)):
+                pattern = r'^(Mon|Tue|Wed|Thu|Fri|Sat|Sun) (\d{1,2}/\d{1,2}/\d{4}) (\d{1,2}:\d{2} (AM|PM)) (?:-|to) ((Mon|Tue|Wed|Thu|Fri|Sat|Sun)? \d{1,2}/\d{1,2}/\d{4} )?(\d{1,2}:\d{2} (AM|PM))$'
+                match = re.match(pattern, lines[x])
+                if match:
+                    break
+                if "Location: " in lines[x - 1]:
                     event = ['', '', '', '']
                     event[0] = line
-                    event[1] = lines[x - 1].strip()
-                    event[2] = lines[x].strip()
+                    event[1] = lines[x - 2].strip()
+                    event[2] = lines[x - 1].strip()
                     try:
-                        if not any(day in lines[x + 1] for day in days_of_the_week):
+                        if not any(day in lines[x] for day in days_of_the_week):
                             pattern = r'^(Mon|Tue|Wed|Thu|Fri|Sat|Sun) (\d{1,2}/\d{1,2}/\d{4}) (\d{1,2}:\d{2} (AM|PM)) (?:-|to) ((Mon|Tue|Wed|Thu|Fri|Sat|Sun)? \d{1,2}/\d{1,2}/\d{4} )?(\d{1,2}:\d{2} (AM|PM))$'
                             run = True
                             count = 0
                             while run:
-                                match = re.match(pattern, lines[x + 2 + count].strip())
+                                match = re.match(pattern, lines[x + 1 + count].strip())
                                 if not match:
-                                    event[3] += lines[x + 1 + count].strip() + ' || '
+                                    if not any(day in lines[x + count] for day in days_of_the_week):
+                                        event[3] += lines[x + count].strip() + ' || '
+                                    else:
+                                        run = False
                                 else:
                                     run = False
                                 count += 1
@@ -130,7 +136,7 @@ def format_text(file_name):
                         break
                     except Exception as e:
                         try:
-                            for a in range(x + 1, len(lines)):
+                            for a in range(x, len(lines)):
                                 event[3] += lines[a].strip()
                             print("file finished")
                         except Exception as e:
