@@ -142,7 +142,7 @@ def format_events(events, df):
 
 
 def create_excel(df, file_name):
-    output_dir = "output"
+    output_dir = "output/files"
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
