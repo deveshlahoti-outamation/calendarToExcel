@@ -104,7 +104,6 @@ def format_text(file_name):
 
         if check_urgent_board(line):
             urgent_boards.append([lines[index], lines[index + 1], lines[index + 2]])
-            print (urgent_boards)
             continue
 
         if check_line(line):
@@ -116,13 +115,24 @@ def format_text(file_name):
                     try:
                         if not any(day in lines[x + 1] for day in days_of_the_week):
                             pattern = r'^(Mon|Tue|Wed|Thu|Fri|Sat|Sun) (\d{1,2}/\d{1,2}/\d{4}) (\d{1,2}:\d{2} (AM|PM)) (?:-|to) ((Mon|Tue|Wed|Thu|Fri|Sat|Sun)? \d{1,2}/\d{1,2}/\d{4} )?(\d{1,2}:\d{2} (AM|PM))$'
-                            match = re.match(pattern, lines[x + 2].strip())
-                            if not match:
-                                event[3] = lines[x + 1].strip()
+                            run = True
+                            count = 0
+                            while run:
+                                match = re.match(pattern, lines[x + 2 + count].strip())
+                                if not match:
+                                    event[3] += lines[x + 1 + count].strip() + ' || '
+                                else:
+                                    run = False
+                                count += 1
+
                         break
                     except Exception as e:
-                        print("file finished")
-            # print(event)
+                        try:
+                            for a in range(x + 1, len(lines)):
+                                event[3] += lines[a].strip()
+                            print("file finished")
+                        except Exception as e:
+                            print("file finished")
             events.append(event)
 
     return events, urgent_boards
