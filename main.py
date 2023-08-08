@@ -146,7 +146,7 @@ def create_excel(df, file_name):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    file_path = os.path.join(output_dir, f"{file_name}.xlsx")
+    file_path = os.path.join(f"{file_name}.xlsx")
     df.to_excel(file_path, index=False, engine='openpyxl')
     book = load_workbook(f"output/{file_name}.xlsx")
     sheet = book.active
