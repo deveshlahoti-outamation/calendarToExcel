@@ -95,52 +95,48 @@ def format_text(file_name):
     lines = text.strip().split("\n")
     lines = format_lines(lines)
 
+    print(len(lines))
+
     events = []
     urgent_boards = []
 
     for index in range(len(lines)):
+        event = []
         line = lines[index]
+
+        is_break = False
 
         if check_urgent_board(line):
             urgent_boards.append([lines[index], lines[index + 1], lines[index + 2]])
             continue
 
         if check_line(line):
-            event = []
-            for x in range(index + 3, len(lines)):
+            for x in range(1, 3):
                 pattern = r'^(Mon|Tue|Wed|Thu|Fri|Sat|Sun) (\d{1,2}/\d{1,2}/\d{4}) (\d{1,2}:\d{2} (AM|PM)) (?:-|to) ((Mon|Tue|Wed|Thu|Fri|Sat|Sun)? \d{1,2}/\d{1,2}/\d{4} )?(\d{1,2}:\d{2} (AM|PM))$'
-                match = re.match(pattern, lines[x])
+                match = re.match(pattern, lines[index + x])
                 if match:
-                    break
-                if "Location: " in lines[x - 2]:
                     event = ['', '', '', '']
-                    event[0] = line
-                    event[1] = lines[x - 3].strip()
-                    event[2] = lines[x - 2].strip()
-                    try:
-                        if not any(day in lines[x] for day in days_of_the_week):
-                            pattern = r'^(Mon|Tue|Wed|Thu|Fri|Sat|Sun) (\d{1,2}/\d{1,2}/\d{4}) (\d{1,2}:\d{2} (AM|PM)) (?:-|to) ((Mon|Tue|Wed|Thu|Fri|Sat|Sun)? \d{1,2}/\d{1,2}/\d{4} )?(\d{1,2}:\d{2} (AM|PM))$'
-                            run = True
-                            count = 0
-                            while run:
-                                match = re.match(pattern, lines[x + 1 + count].strip())
-                                if not match:
-                                    if not any(day in lines[x + count] for day in days_of_the_week):
-                                        event[3] += lines[x + count].strip() + ' || '
-                                    else:
-                                        run = False
+                    event[0] = line.strip()
+                    event[1] = lines[index + x].strip()
+                    for y in range(index, len(lines)):
+                        if "Location:" in lines[y]:
+                            lo_index = y
+                            event[2] = lines[lo_index].strip()
+                            for z in range(lo_index + 1, len(lines)):
+                                current = z
+                                if current + 1 == len(lines):
+                                    if "Location" not in lines[current]:
+                                        event[3] += lines[current].strip() + ' || '
+                                    break
+                                if not any(day in lines[current] for day in days_of_the_week) and not re.match(pattern, lines[current + 1]) and not check_line(lines[current]):
+                                    event[3] += lines[current].strip() + ' || '
                                 else:
-                                    run = False
-                                count += 1
-
-                        break
-                    except Exception as e:
-                        try:
-                            for a in range(x, len(lines)):
-                                event[3] += lines[a].strip()
-                            print("file finished")
-                        except Exception as e:
-                            print("file finished")
+                                    is_break = True
+                                    break
+                        if is_break:
+                            break
+                if is_break:
+                    break
 
             if event:
                 events.append(event)
