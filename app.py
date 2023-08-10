@@ -51,9 +51,20 @@ files = st.file_uploader('', ["pdf"], accept_multiple_files=True, on_change=clea
 
 if len(files) != 0:
     save_uploaded_file(files)
-    main()
-    with st.columns(6)[5]:
+    completions = main()
+
+    cols = st.columns(6)
+
+    with cols[5]:
         download_files()
+
+    with cols[0]:
+        if st.button(label="Clear Files"):
+            clean_files()
+            st.experimental_rerun()
+
+    for file in files:
+        index = files.index(file)
+        success = st.success(f'***{file.name}*** &nbsp; has added {completions[index]} rows to the excel.')
+
     clean_files()
-
-
