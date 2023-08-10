@@ -60,6 +60,6 @@ if len(files) != 0:
 
     for file in files:
         index = files.index(file)
-        success = st.success(f'***{file.name}*** &nbsp; has {completions[index]} rows to its excel.')
+        success = st.success(f'***{file.name}*** &nbsp; has {completions[index]} rows added to its excel.')
 
     clean_files()
