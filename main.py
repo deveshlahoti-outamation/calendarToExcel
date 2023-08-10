@@ -126,7 +126,7 @@ def format_text(file_name):
                                     if "Location" not in lines[current]:
                                         event[3] += lines[current].strip() + ' || '
                                     break
-                                if not any(day in lines[current] for day in days_of_the_week) and not re.match(pattern, lines[current + 1]) and not check_line(lines[current]):
+                                if not any(day in lines[current] for day in days_of_the_week) and not re.match(pattern, lines[current + 1]):
                                     event[3] += lines[current].strip() + ' || '
                                 else:
                                     is_break = True
@@ -261,6 +261,7 @@ def clean_files():
 
 def main():
     pdf_files = initialize_data()
+    completed = []
 
     for pdf in pdf_files:
         df = pd.DataFrame(excel_data)
@@ -275,6 +276,9 @@ def main():
 
         df = format_events(events, df)
         df2 = format_ub(urgent_boards, df2)
+        completed.append(len(df.index) + len(df2.index))
 
         create_excel(df, df2, file_name)
         resize_columns(file_name)
+
+    return completed
