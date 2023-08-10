@@ -58,11 +58,6 @@ if len(files) != 0:
     with cols[5]:
         download_files()
 
-    with cols[0]:
-        if st.button(label="Clear Files"):
-            clean_files()
-            st.experimental_rerun()
-
     for file in files:
         index = files.index(file)
         success = st.success(f'***{file.name}*** &nbsp; has added {completions[index]} rows to the excel.')
