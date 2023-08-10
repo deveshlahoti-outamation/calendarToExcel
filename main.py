@@ -95,8 +95,6 @@ def format_text(file_name):
     lines = text.strip().split("\n")
     lines = format_lines(lines)
 
-    print(len(lines))
-
     events = []
     urgent_boards = []
 
@@ -112,7 +110,7 @@ def format_text(file_name):
 
         if check_line(line):
             for x in range(1, 3):
-                pattern = r'^(Mon|Tue|Wed|Thu|Fri|Sat|Sun) (\d{1,2}/\d{1,2}/\d{4}) (\d{1,2}:\d{2} (AM|PM)) (?:-|to) ((Mon|Tue|Wed|Thu|Fri|Sat|Sun)? \d{1,2}/\d{1,2}/\d{4} )?(\d{1,2}:\d{2} (AM|PM))$'
+                pattern = r'^(Mon|Tue|Wed|Thu|Fri|Sat|Sun) (\d{1,2}/\d{1,2}/\d{4}),? (\d{1,2}:\d{2} (AM|PM))(?: (?:-|to) ((Mon|Tue|Wed|Thu|Fri|Sat|Sun)? \d{1,2}/\d{1,2}/\d{4},? )?(\d{1,2}:\d{2} (AM|PM)))?$'
                 match = re.match(pattern, lines[index + x])
                 if match:
                     event = ['', '', '', '']

@@ -47,7 +47,7 @@ st.set_page_config(page_title="Calendar Converter", page_icon=":bookmark_tabs:",
 st.markdown("<h1 style='text-align: center; color: blue;'>Calendar to Excel</h1>", unsafe_allow_html=True)
 st.markdown("<h2 style='text-align: center; color: gray;'>Drop your file(s) here 👇</h2>", unsafe_allow_html=True)
 
-files = st.file_uploader('', ["pdf"], accept_multiple_files=True)
+files = st.file_uploader('', ["pdf"], accept_multiple_files=True, on_change=clean_files())
 
 if len(files) != 0:
     save_uploaded_file(files)
