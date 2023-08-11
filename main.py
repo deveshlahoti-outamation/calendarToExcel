@@ -21,7 +21,8 @@ excel_data = {
     'Medical Number': [],
     'Procedure': [],
     'CPT Codes': [],
-    'Comments': [],
+    'Status': [],
+    'Comments': []
 }
 
 ub_data = {
